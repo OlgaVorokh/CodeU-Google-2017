@@ -1,8 +1,0 @@
-4
-CAR
-CARD
-CART
-CAT
-2 3
-A A R
-T C D
