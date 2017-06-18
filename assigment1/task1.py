@@ -29,6 +29,10 @@ def main():
     assert check_words('Оля', 'Яло')
     assert check_words('кАрОлИнА', 'Анилорак')
     assert check_words('', '')
+    assert not check_words('Lala', '')
+    assert not check_words('', 'laLla')
+    assert not check_words('white', 'black')
+
 
 if __name__ == '__main__':
     main()
