@@ -4,6 +4,24 @@ import math
 
 
 class LCABuilder(object):
+    """
+    On this task we should find least common ancestor (lca) of two vertexes. I made this with binary lift method.
+
+    Precalculate for each vertexes their first ancestor, second ancestor, foth and so on. Keep this information
+    in 2D array self.parent, so, for example, self.parent[ver][index] means 2^index ancestor of vertex ver
+    (ver=0.. n - 1, index = 0, ... log n; ancestor of root is root). Also save time in and time out for each vertex.
+    This information calculated with dfs. I do this because it gives me to understand with O(1), if one vertex is
+    an ancestor of another (if it's true, time in of ancestor should be earlier and time out later). I implement
+    this check in self._check(first_ver, second_ver) method.
+
+    This preprocessing are made in build method with O(n log n), where n is a number of vertexes in a graph.
+
+    Than we get some request to find lca of two vertexes A and B.
+
+    Time complexity:
+    * prepocessing: O(n log n)
+    * get answer for (A, B) request: O(log n)
+    """
     def __init__(self, graph):
         self.graph = graph
         self.root = 0
@@ -18,6 +36,26 @@ class LCABuilder(object):
         self._dfs(self.root)
 
     def _dfs(self, ver, pnt=0):
+        """
+        Parameters:
+        -----------
+        ver: int
+            current vertex, which is investigate on this iteration
+        pnt: int
+            previous vertex, from which we can go to current vertex (closest ancestor of current vertex)
+
+        Save time of arrival in vertex. Need for checking if one vertex in an ancestor of another with O(1)
+        time complexity (this checking is implementing in _check method). Save closest ancestor of current
+        vertex ver.
+
+        We precalculate on previous iterations of dfs answer for all ancestors of current vertex, and now
+        get this ancestors and update information in self.parent array for ver. Go to all of descendants of current
+        vertex and make the same operations.
+
+        Save leaving time from vertex. Need for checking if one vertex in an ancestor of another with O(1)
+        time complexity (this checking is implementing in _check method
+
+        """
         self.time_in[ver] = self.timer
         self.timer += 1
 
@@ -35,6 +73,23 @@ class LCABuilder(object):
         self.timer += 1
 
     def find(self, first_ver, second_ver):
+        """
+        Check if one vertex is an ancestor of another with self._check method.
+
+        If this is not true, starting from power log_2(n) (keep this in self.two_pow attribute) try to find
+        highest (closest to root) vertex for A, that not the ancestor of B (that vertex C, for which C is
+        not the ancestor or B, but self.parent[C][0] - ancestor of B ). We can find this vertex with O(log n)
+        time complexity.
+
+        So what we do: start from step = self.two_pow (or step = log_2(n) as we understand above). If
+        self.parent[A][step] is not the ancestor of B (all the vertexes on the way of ancestor(A, B) to root
+        also get True from self._check method and marked as ancestors, but not least; ancestor of root is root),
+        make A = self.parent[A][step] and make step -=1. If self.parent[A][step] is an ancestor, just make
+        decrease of step.
+
+        Obviously, when step becomes less than zero, the vertex of A will be the desired vertex (A is not an
+        ancestor of B, but self.parent[A][0] is an ancestor of B) and self.parent[A][0]will be the answer.
+        """
         if self._check(first_ver, second_ver):
             return first_ver
         if self._check(second_ver, first_ver):
@@ -82,3 +137,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
