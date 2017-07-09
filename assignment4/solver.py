@@ -4,11 +4,11 @@ import unittest
 import Queue
 
 
-def bfs(greed, start_x, start_y, used):
+def bfs(grid, start_x, start_y, used):
     """
     Parameters:
     -----------
-    greed: 2D int array
+    grid: 2D int array
         illustrate input map, contain only {0, 1} as values
     start_x: int 
         number of row from starting for checking coordinates
@@ -21,8 +21,8 @@ def bfs(greed, start_x, start_y, used):
     cells. If new cell is water or cell is land and we checked and marked it in previous iterations, don't 
     check this cells. Otherwise marked land-cell, that we be in it, and do the same for it as I write above.
     """
-    n_rows = len(greed)
-    n_columns = len(greed[0])
+    n_rows = len(grid)
+    n_columns = len(grid[0])
 
     queue = Queue.Queue()
     queue.put((start_x, start_y))
@@ -30,19 +30,16 @@ def bfs(greed, start_x, start_y, used):
         x, y = queue.get()
         used[x][y] = True
         for dx, dy in zip([-1, 1, 0, 0], [0, 0, 1, -1]):
-            if not (
-                    0 <= x + dx < n_rows and
-                    0 <= y + dy < n_columns
-                ):
+            if not (0 <= x + dx < n_rows and 0 <= y + dy < n_columns):
                 continue
-            if not greed[x + dx][y + dy]:
+            if not grid[x + dx][y + dy]:
                 continue
             if used[x + dx][y + dy]:
                 continue
-            queue.put((x + dx, y + dy))  
+            queue.put((x + dx, y + dy))
 
 
-def find_islands(n_rows, n_columns, greed):
+def find_islands(n_rows, n_columns, grid):
     """
     Find all islands.
 
@@ -58,16 +55,16 @@ def find_islands(n_rows, n_columns, greed):
         for j in xrange(n_columns):
             if used[i][j]:
                 continue
-            if not greed[i][j]:
-                continue 
-            islands_counter += 1 
-            bfs(greed, i, j, used)
+            if not grid[i][j]:
+                continue
+            islands_counter += 1
+            bfs(grid, i, j, used)
     return islands_counter
 
 
 def data_from_file(filename):
     """
-    Get input greed from file.
+    Get input grid from file.
 
     First line contains two integers: 
     -- number of rows N
@@ -77,32 +74,32 @@ def data_from_file(filename):
     Value 0 means there is water in the cell.
     Value 1 means there is land in the cell.
     """
-    greed = []
+    grid = []
     with open(filename, 'r') as f:
         n_rows, n_columns = map(int, f.readline().decode('UTF-8').strip().split())
         for _ in xrange(n_rows):
             values = map(int, f.readline().decode('UTF-8').strip().split())
             assert len(values) == n_columns
-            greed.append(values)
-    return n_rows, n_columns, greed
+            grid.append(values)
+    return n_rows, n_columns, grid
 
 
 class TestSolver(unittest.TestCase):
-    def test_no_greed(self):
-        n_rows, n_columns, greed = data_from_file('inputs/input_no_greed.txt')
-        self.assertEqual(find_islands(n_rows, n_columns, greed), 0)
+    def test_no_grid(self):
+        n_rows, n_columns, grid = data_from_file('inputs/input_no_grid.txt')
+        self.assertEqual(find_islands(n_rows, n_columns, grid), 0)
 
     def test_no_islands(self):
-        n_rows, n_columns, greed = data_from_file('inputs/input_no_islands.txt')
-        self.assertEqual(find_islands(n_rows, n_columns, greed), 0)
+        n_rows, n_columns, grid = data_from_file('inputs/input_no_islands.txt')
+        self.assertEqual(find_islands(n_rows, n_columns, grid), 0)
 
     def test_islands_near_fringe(self):
-        n_rows, n_columns, greed = data_from_file('inputs/input_islands_near_fringe.txt')
-        self.assertEqual(find_islands(n_rows, n_columns, greed), 3)
+        n_rows, n_columns, grid = data_from_file('inputs/input_islands_near_fringe.txt')
+        self.assertEqual(find_islands(n_rows, n_columns, grid), 3)
 
     def test_many_islands(self):
-        n_rows, n_columns, greed = data_from_file('inputs/input_many_islands.txt')
-        self.assertEqual(find_islands(n_rows, n_columns, greed), 4)
+        n_rows, n_columns, grid = data_from_file('inputs/input_many_islands.txt')
+        self.assertEqual(find_islands(n_rows, n_columns, grid), 4)
 
 
 def main():
@@ -111,3 +108,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
