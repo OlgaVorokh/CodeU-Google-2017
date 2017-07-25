@@ -1,4 +1,8 @@
 # -*- coding: UTF-8 -*-
+"""
+Using the topological sort, build resulting alphabet.
+"""
+
 
 import unittest
 
@@ -77,28 +81,23 @@ def data_from_file(filename):
 class TestSolver(unittest.TestCase):
     def test_google_test(self):
         words = data_from_file('input/google_test.txt')
-        solver = AlphabetBuilder()
-        self.assertListEqual(solver.get_alphabet(words), [u't', u'a', u'r', u'c'])
+        self.assertListEqual(AlphabetBuilder().get_alphabet(words), [u't', u'a', u'r', u'c'])
 
     def test_no_words(self):
         words = data_from_file('input/no_words.txt')
-        solver = AlphabetBuilder()
-        self.assertListEqual(solver.get_alphabet(words), [])
+        self.assertListEqual(AlphabetBuilder().get_alphabet(words), [])
 
     def test_only_one_letter(self):
         words = data_from_file('input/only_one_letter.txt')
-        solver = AlphabetBuilder()
-        self.assertListEqual(solver.get_alphabet(words), [u'a'])
+        self.assertListEqual(AlphabetBuilder().get_alphabet(words), [u'a'])
 
     def test_different_case(self):
         words = data_from_file('input/different_case.txt')
-        solver = AlphabetBuilder()
-        self.assertListEqual(solver.get_alphabet(words), [u's', u'l', u'b', u'a', u'c', u't'])
+        self.assertListEqual(AlphabetBuilder().get_alphabet(words), [u's', u'l', u'b', u'a', u'c', u't'])
 
     def test_similar_words(self):
         words = data_from_file('input/similar_words.txt')
-        solver = AlphabetBuilder()
-        self.assertListEqual(solver.get_alphabet(words), [u'c', u'a', u's', u'e'])
+        self.assertListEqual(AlphabetBuilder().get_alphabet(words), [u'c', u'a', u's', u'e'])
 
 
 def main():
